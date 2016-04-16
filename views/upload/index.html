@@ -1,0 +1,40 @@
+{{template "../head.html" .}}
+	
+	<!-- Upload CSS -->
+	<link rel="stylesheet" type="text/css" href="./static/css/upload-form.css">
+
+	<script>
+		$(document).ready(function() {
+			$("#upload").click(function() {
+				var AK = $("#AK").val();
+				var SK = $("#SK").val();
+				var BU = $("#Bucket").val();
+				var upurl = $("#image-file").val();
+				var fileName = upurl.split("\\").pop();
+				alert("AK:"+AK+" SK:"+ SK+ "BU:"+BU+"\nURL:"+ upurl+ "\nFileName:"+ fileName);
+			});
+		});
+	</script>
+</head>
+<body>
+	<div class="container">
+
+      <form class="form-signin" role="form" enctype="multipart/form-data" type="POST" action="#">
+        <h2 class="form-signin-heading">Upload the image File to Qiniu</h2>
+		<span>Access Key <input id="AK" type="text" name="a-k" class="form-control" required autofocus></span>
+		<span>Secret Key<input id="SK" type="password" name="s-k" class="form-control" required autofocus></span>
+		<span>Bucket<input id="Bucket"  type="text" name="bucket-name" class="form-control" required></input></span>
+        <br>
+		<span></span>
+        <input id="image-file" type="file" class="form-control file" required>
+        <br>
+
+		<div class="tips">
+			<p></p>
+		</div>
+        <button id="upload" class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
+      </form>
+
+    </div>
+</body>
+</html>
