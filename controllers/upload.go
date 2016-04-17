@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	// . "github.com/qiniu/api.v7/conf"
+	"fmt"
+	"log"
 )
 
 type UploadController struct {
@@ -14,8 +17,20 @@ func (c *UploadController) Get() {
 }
 
 func (c *UploadController) Post() {
-	// var String AK = "m_xn4k8rHFoXmjYC0z02X-nm5yFaIAy5dw-S4Vcu"
-	// var String SK = "IYKDGVTahKPIxe4kJpmxQZ48FIpKrZHEUc7crLco"
+	AK := c.GetString("a-k")
+	SK := c.GetString("s-k")
+	log.Println("AK-> " + AK + " SK-> " + SK)
+	f, h, err := c.GetFile("upload-image")
+	defer f.Close()
+	if err != nil {
+		fmt.Println("Get File Error")
+	} else {
+		err = c.SaveToFile("upload-image", beego.AppConfig.String("UploadPath")+h.Filename)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	c.TplName = "upload/index.html"
 }
 
 func Upload_Image() {

@@ -19,14 +19,14 @@
 <body>
 	<div class="container">
 
-      <form class="form-signin" role="form" enctype="multipart/form-data" type="POST" action="#">
+      <form class="form-signin" role="form" enctype="multipart/form-data" method="POST" action="/upload">
         <h2 class="form-signin-heading">Upload the image File to Qiniu</h2>
 		<span>Access Key <input id="AK" type="text" name="a-k" class="form-control" required autofocus></span>
 		<span>Secret Key<input id="SK" type="password" name="s-k" class="form-control" required autofocus></span>
 		<span>Bucket<input id="Bucket"  type="text" name="bucket-name" class="form-control" required></input></span>
         <br>
 		<span></span>
-        <input id="image-file" type="file" class="form-control file" required>
+        <input id="image-file" name="upload-image" type="file" class="form-control file" required>
         <br>
 
 		<div class="tips">
