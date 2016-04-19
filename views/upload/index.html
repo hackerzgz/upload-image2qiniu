@@ -6,12 +6,12 @@
 	<script>
 		$(document).ready(function() {
 			$("#upload").click(function() {
-				var AK = $("#AK").val();
-				var SK = $("#SK").val();
-				var BU = $("#Bucket").val();
-				var upurl = $("#image-file").val();
-				var fileName = upurl.split("\\").pop();
-				alert("AK:"+AK+" SK:"+ SK+ "BU:"+BU+"\nURL:"+ upurl+ "\nFileName:"+ fileName);
+				// var AK = $("#AK").val();
+				// var SK = $("#SK").val();
+				// var BU = $("#Bucket").val();
+				// var upurl = $("#image-file").val();
+				// var fileName = upurl.split("\\").pop();
+				// alert("AK:"+AK+" SK:"+ SK+ "BU:"+BU+"\nURL:"+ upurl+ "\nFileName:"+ fileName);
 			});
 		});
 	</script>
@@ -21,8 +21,8 @@
 
       <form class="form-signin" role="form" enctype="multipart/form-data" method="POST" action="/upload">
         <h2 class="form-signin-heading">Upload the image File to Qiniu</h2>
-		<span>Access Key <input id="AK" type="text" name="a-k" class="form-control" required autofocus></span>
-		<span>Secret Key<input id="SK" type="password" name="s-k" class="form-control" required autofocus></span>
+		<span>Access Key <input id="AK" type="text" name="a-k" value="{{.AK}}" class="form-control" required autofocus></span>
+		<span>Secret Key<input id="SK" type="password" name="s-k" value="{{.SK}}" class="form-control" required autofocus></span>
 		<span>Bucket<input id="Bucket"  type="text" name="bucket-name" class="form-control" required></input></span>
         <br>
 		<span></span>
@@ -30,7 +30,8 @@
         <br>
 
 		<div class="tips">
-			<p></p>
+			<p>{{.tips}}</p>
+			<p>{{.filepath}}</p>
 		</div>
         <button id="upload" class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
       </form>
