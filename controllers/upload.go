@@ -12,7 +12,7 @@ import (
 	"upload-image/utils"
 )
 
-var bm, err = cache.NewCache("file", `{"CachePath":"./cache","FileSuffix":".cache","DirectoryLevel":1,"EmbedExpiry":120}`)
+var bm, err = cache.NewCache("file", `{"CachePath":"./cache","FileSuffix":".cache","DirectoryLevel":2,"EmbedExpiry":120}`)
 
 //构造返回值字段
 type PutRet struct {
@@ -26,21 +26,27 @@ type UploadController struct {
 
 func (this *UploadController) Get() {
 	// ===============  Cache Test
-	timeoutDuration := 10 * time.Second
-	if err = bm.Put("astaxie", "111", timeoutDuration); err != nil {
-		fmt.Println("Save Error")
-		fmt.Println(err)
-	} else {
-		fmt.Println("Save Success")
+	// if err = bm.Put("astaxie", "111", 10*time.Minute); err != nil {
+	// 	fmt.Println("Save Error")
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Println("Save Success")
+	// }
+	// if v := bm.Get("astaxie"); v.(string) != "111" {
+	// 	fmt.Println("Read Error")
+	// } else {
+	// 	fmt.Println("Read Success")
+	// }
+	if bm.Get("AK") != "" && bm.Get("SK") != "" {
+		this.Data["AKEY"] = bm.Get("AK").(string)
+		this.Data["SKEY"] = bm.Get("SK").(string)
 	}
-	if v := bm.Get("astaxie"); v.(string) != "111" {
-		fmt.Println("Read Error")
-	} else {
-		fmt.Println("Read Success")
-	}
-	fmt.Println(bm.Get("astaxie").(string))
+	// fmt.Println("Time --> ", time.Second)
+	// fmt.Println("Cache --> ", bm.Get("astaxie").(string) == "111")
+	// fmt.Println(bm.Get("astaxie").(string))
 	// ===============  Cache Test
-	this.Data["Title"] = "Upload Image 2 QN"
+	this.Data["Title"] = "Upload Image 2 QiNiu"
+	this.Data["Tips"] = "一旦上传成功，会将你上传成功的AK以及SK进行加密缓存10min，这时候之后只要你不重新刷新页面，你依然不需要重新CV你的AK以及SK"
 	this.TplName = "upload/index.html"
 }
 
@@ -96,6 +102,13 @@ func (this *UploadController) Post() {
 		this.TplName = "error.html"
 		return
 	} else {
+		// 将AK以及SK缓存到Cache模块中
+		if err := bm.Put("AK", this.GetString("a-k"), 10*time.Second); err != nil {
+			fmt.Println("Cache Faile!")
+		}
+		if err := bm.Put("SK", this.GetString("s-k"), 10*time.Second); err != nil {
+			fmt.Println("Cache Faile!")
+		}
 		this.Data["tips"] = "Upload Success!"
 		this.Data["filepath"] = "FilePath: "
 		this.TplName = "upload/index.html"

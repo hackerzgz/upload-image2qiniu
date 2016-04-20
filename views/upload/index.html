@@ -20,9 +20,9 @@
 	<div class="container">
 
       <form class="form-signin" role="form" enctype="multipart/form-data" method="POST" action="/upload">
-        <h2 class="form-signin-heading">Upload the image File to Qiniu</h2>
-		<span>Access Key <input id="AK" type="text" name="a-k" value="{{.AK}}" class="form-control" required autofocus></span>
-		<span>Secret Key<input id="SK" type="password" name="s-k" value="{{.SK}}" class="form-control" required autofocus></span>
+        <h2 class="form-signin-heading">{{.Title}}</h2>
+		<span>Access Key <input id="AK" type="text" name="a-k" value="{{.AKEY}}" class="form-control" required autofocus></span>
+		<span>Secret Key<input id="SK" type="password" name="s-k" value="{{.SKEY}}" class="form-control" required autofocus></span>
 		<span>Bucket<input id="Bucket"  type="text" name="bucket-name" class="form-control" required></input></span>
         <br>
 		<span></span>
@@ -30,7 +30,7 @@
         <br>
 
 		<div class="tips">
-			<p>{{.tips}}</p>
+			<p>{{.Tips}}</p>
 			<p>{{.filepath}}</p>
 		</div>
         <button id="upload" class="btn btn-lg btn-primary btn-block" type="submit">Upload</button>
