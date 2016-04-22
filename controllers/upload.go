@@ -26,24 +26,8 @@ type UploadController struct {
 
 func (this *UploadController) Get() {
 	// ===============  Cache Test
-	// if err = bm.Put("astaxie", "111", 10*time.Minute); err != nil {
-	// 	fmt.Println("Save Error")
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Println("Save Success")
-	// }
-	// if v := bm.Get("astaxie"); v.(string) != "111" {
-	// 	fmt.Println("Read Error")
-	// } else {
-	// 	fmt.Println("Read Success")
-	// }
-	if bm.Get("AK") != "" && bm.Get("SK") != "" {
-		this.Data["AKEY"] = bm.Get("AK").(string)
-		this.Data["SKEY"] = bm.Get("SK").(string)
-	}
-	// fmt.Println("Time --> ", time.Second)
-	// fmt.Println("Cache --> ", bm.Get("astaxie").(string) == "111")
-	// fmt.Println(bm.Get("astaxie").(string))
+	this.Data["AKEY"], this.Data["SKEY"] = ReadCache()
+	fmt.Println("AK, SK -->")
 	// ===============  Cache Test
 	this.Data["Title"] = "Upload Image 2 QiNiu"
 	this.Data["Tips"] = "一旦上传成功，会将你上传成功的AK以及SK进行加密缓存10min，这时候之后只要你不重新刷新页面，你依然不需要重新CV你的AK以及SK"
@@ -55,10 +39,38 @@ func (this *UploadController) Post() {
 	conf.ACCESS_KEY = this.GetString("a-k")
 	conf.SECRET_KEY = this.GetString("s-k")
 	bucket := this.GetString("bucket-name")
-	// fmt.Println(utils.GetAppRoot())
-	fmt.Println("AK-> " + conf.ACCESS_KEY + " SK-> " + conf.SECRET_KEY)
-	fmt.Println("Bucket --> " + bucket)
 
+	// Get the form file
+	f, h, err := this.GetFile("upload-image")
+	defer f.Close()
+	if err != nil {
+		fmt.Println("Get File Error")
+	} else {
+		err = this.SaveToFile("upload-image", beego.AppConfig.String("UploadPath")+h.Filename)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+	// 简易上传
+	ret, res := SimpleUploadFile(bucket, h.Filename)
+	//打印返回的Hash,Key信息
+	// fmt.Println(ret)
+	//打印出错信息
+	if res != nil {
+		Jump2ErrPage(this, res)
+	} else {
+		// 将AK以及SK缓存到Cache模块中
+		setCache(this.GetString("a-k"), this.GetString("s-k"))
+		this.Data["AKEY"], this.Data["SKEY"] = ReadCache()
+		this.Data["Title"] = "Upload Image 2 QiNiu"
+		this.Data["Tips"] = "Upload Success!"
+		this.Data["filepath"] = "FilePath: <公网地址>/" + ret.Key
+		this.TplName = "upload/index.html"
+	}
+}
+
+// 简易上传
+func SimpleUploadFile(bucket, fileName string) (putRet PutRet, err error) {
 	// 创建一个Client
 	c := kodo.New(0, nil)
 
@@ -75,46 +87,33 @@ func (this *UploadController) Post() {
 	zone := 0
 	uploader := kodocli.NewUploader(zone, nil)
 
-	// Get the form file
-	f, h, err := this.GetFile("upload-image")
-	defer f.Close()
-	if err != nil {
-		fmt.Println("Get File Error")
-	} else {
-		err = this.SaveToFile("upload-image", beego.AppConfig.String("UploadPath")+h.Filename)
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-	}
-
 	var ret PutRet
 	//设置上传文件的路径
-	filepath := utils.GetAppRoot() + "/upload/" + h.Filename
+	filepath := utils.GetAppRoot() + "/upload/" + fileName
 	fmt.Println("FileName --> " + filepath)
 	//调用PutFileWithoutKey方式上传，没有设置saveasKey以文件的hash命名
-	res := uploader.PutFileWithoutKey(nil, &ret, token, filepath, nil)
-	//打印返回的信息
-	fmt.Println(ret)
-	//打印出错信息
-	if res != nil {
-		fmt.Println("io.Put failed:", res)
-		this.Data["res"] = res
-		this.TplName = "error.html"
-		return
-	} else {
-		// 将AK以及SK缓存到Cache模块中
-		if err := bm.Put("AK", this.GetString("a-k"), 10*time.Second); err != nil {
-			fmt.Println("Cache Faile!")
-		}
-		if err := bm.Put("SK", this.GetString("s-k"), 10*time.Second); err != nil {
-			fmt.Println("Cache Faile!")
-		}
-		this.Data["tips"] = "Upload Success!"
-		this.Data["filepath"] = "FilePath: "
-		this.TplName = "upload/index.html"
-	}
-
-	// this.TplName = "upload/index.html"
+	res := uploader.PutFile(nil, &ret, token, fileName, filepath, nil)
+	return ret, res
 }
 
-// return result = {Ft2K9RTV_kSlX8KM29eLS9YC1SJq Ft2K9RTV_kSlX8KM29eLS9YC1SJq}
+// 读取AK/SK缓存
+func ReadCache() (ak, sk string) {
+	return bm.Get("AK").(string), bm.Get("SK").(string)
+}
+
+// 设置AK/SK缓存
+func setCache(ak, sk string) {
+	if err := bm.Put("AK", ak, 10*time.Second); err != nil {
+		fmt.Println("AK Cache Faile!")
+	}
+	if err := bm.Put("SK", sk, 10*time.Second); err != nil {
+		fmt.Println("SK Cache Faile!")
+	}
+}
+
+// 跳转至错误页面
+func Jump2ErrPage(this *UploadController, err error) {
+	this.Data["res"] = "文件上传出错了：" + err.Error()
+	this.TplName = "error.html"
+	return
+}
