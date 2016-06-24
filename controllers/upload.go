@@ -9,7 +9,7 @@ import (
 	"qiniupkg.com/api.v7/kodocli"
 	// "reflect"
 	"time"
-	"upload-image/utils"
+	"upload-image2qiniu/utils"
 )
 
 var bm, err = cache.NewCache("file", `{"CachePath":"./cache","FileSuffix":".cache","DirectoryLevel":2,"EmbedExpiry":120}`)

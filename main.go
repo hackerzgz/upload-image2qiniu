@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	_ "upload-image/routers"
+	_ "upload-image2qiniu/routers"
 )
 
 func main() {
