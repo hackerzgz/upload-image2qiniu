@@ -46,6 +46,8 @@ github.com/astaxie/cache/file.go
 ### 
 后来PR了beedoc，现在没有这个问题了 :)
 
+=== 
+
 ## 
 Usage:
 
