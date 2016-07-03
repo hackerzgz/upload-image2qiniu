@@ -76,7 +76,7 @@ func (this *UploadController) Post() {
 		setCache(this.GetString("a-k"), this.GetString("s-k"))
 		setReturnValue("Upload Image 2 QiNiu", "Upload Success!", GetFilePath()+ret.Key)
 		ReturnValue.Flag = true
-		go setReturnStatus()()
+		go setReturnStatus()
 		// 303防止POST提交之后刷新出现重新提交操作
 		this.Redirect("/upload", 303)
 	}
