@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/cache"
 	"github.com/qiniu/api.v7/kodo"
@@ -75,6 +76,7 @@ func (this *UploadController) Post() {
 		setCache(this.GetString("a-k"), this.GetString("s-k"))
 		setReturnValue("Upload Image 2 QiNiu", "Upload Success!", GetFilePath()+ret.Key)
 		ReturnValue.Flag = true
+		go setReturnStatus()()
 		// 303防止POST提交之后刷新出现重新提交操作
 		this.Redirect("/upload", 303)
 	}
@@ -83,6 +85,12 @@ func (this *UploadController) Post() {
 // 设置页面返回值提示
 func setReturnValue(title, tips, filepath string) {
 	ReturnValue.Title, ReturnValue.Tips, ReturnValue.FilePath = title, tips, filepath
+}
+
+// 设置过时页面返回信息，5分钟后取消返回上传图片的公网地址
+func setReturnStatus() {
+	time.Sleep(5 * time.Minute)
+	ReturnValue.Flag = false
 }
 
 // 简易上传
