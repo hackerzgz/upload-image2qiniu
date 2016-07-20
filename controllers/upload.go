@@ -127,10 +127,10 @@ func ReadCache() (ak, sk string) {
 
 // 设置AK/SK缓存
 func setCache(ak, sk string) {
-	if err := bm.Put("AK", ak, 10*time.Minute); err != nil {
+	if err := bm.Put("AK", ak, 1*time.Minute); err != nil {
 		fmt.Println("AK Cache Faile!")
 	}
-	if err := bm.Put("SK", sk, 10*time.Minute); err != nil {
+	if err := bm.Put("SK", sk, 1*time.Minute); err != nil {
 		fmt.Println("SK Cache Faile!")
 	}
 }
@@ -139,6 +139,7 @@ func setCache(ak, sk string) {
 func Jump2ErrPage(this *UploadController, err error) {
 	this.Data["res"] = "文件上传出错了：" + err.Error()
 	this.TplName = "error.html"
+	time.Sleep(5 * time.Second)
 	return
 }
 

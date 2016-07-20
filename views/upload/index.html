@@ -21,9 +21,9 @@
 
       <form class="form-signin" role="form" enctype="multipart/form-data" method="POST" action="/upload">
         <h2 class="form-signin-heading">{{.Title}}</h2>
-		<span>Access Key <input id="AK" type="text" name="a-k" value="{{.AKEY}}" class="form-control" required autofocus></span>
-		<span>Secret Key<input id="SK" type="password" name="s-k" value="{{.SKEY}}" class="form-control" required autofocus></span>
-		<span>Bucket<input id="Bucket"  type="text" name="bucket-name" class="form-control" required></input></span>
+		<span>Access Key <input id="AK" type="text" name="a-k" value="{{.AKEY}}" class="form-control" required autofocus autocomplete="off"></span>
+		<span>Secret Key<input id="SK" type="password" name="s-k" value="{{.SKEY}}" class="form-control" required autofocus  autocomplete="off"></span>
+		<span>Bucket<input id="Bucket"  type="text" name="bucket-name" class="form-control" required autocomplete="off"></input></span>
         <br>
 		<span></span>
         <input id="image-file" name="upload-image" type="file" class="form-control file" required>
