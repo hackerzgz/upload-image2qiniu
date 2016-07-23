@@ -38,7 +38,7 @@ func (this *UploadController) Get() {
 	this.Data["AKEY"], this.Data["SKEY"] = ReadCache()
 	// ===============  Cache Test
 	if !ReturnValue.Flag {
-		setReturnValue("Upload Image 2 QiNiu", "一旦上传成功，会将你上传成功的AK以及SK进行加密缓存10min，这时候之后只要你不重新刷新页面，你依然不需要重新CV你的AK以及SK", "")
+		setReturnValue("Upload Image 2 QiNiu", "一旦上传成功，会将你上传成功的AK以及SK进行加密缓存1min，这时候之后只要你不重新刷新页面，你依然不需要重新CV你的AK以及SK", "")
 	}
 	this.Data["Title"] = ReturnValue.Title
 	this.Data["Tips"] = ReturnValue.Tips
