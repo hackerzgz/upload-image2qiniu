@@ -1,4 +1,4 @@
-#Upload-Image2Qiniu
+# Upload-Image2Qiniu
 ---
 ## 
 
@@ -48,9 +48,12 @@ github.com/astaxie/cache/file.go
 
 === 
 
-## 
-Usage:
+## Usage:
 
-```
+```shell
 $ bee run 
 ```
+
+## Demo
+
+`[Demo](http://123.207.0.81:8080/upload)`
